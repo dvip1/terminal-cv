@@ -18,6 +18,11 @@ export function MatrixRain({ onDone }: { onDone: () => void }) {
     canvas.width = parent.clientWidth;
     canvas.height = parent.clientHeight;
 
+    const rainColor =
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--term-green")
+        .trim() || "#57c97a";
+
     const fontSize = 16;
     const columns = Math.ceil(canvas.width / fontSize);
     const drops = Array.from({ length: columns }, () =>
@@ -32,7 +37,7 @@ export function MatrixRain({ onDone }: { onDone: () => void }) {
       last = t;
       ctx!.fillStyle = "rgba(5, 8, 10, 0.18)";
       ctx!.fillRect(0, 0, canvas!.width, canvas!.height);
-      ctx!.fillStyle = "#57c97a";
+      ctx!.fillStyle = rainColor;
       ctx!.font = `${fontSize}px monospace`;
       for (let i = 0; i < drops.length; i++) {
         const ch = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];

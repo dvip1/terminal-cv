@@ -1,4 +1,5 @@
 import type { Post } from "@/content/writing";
+import type { TermTheme } from "./themes";
 
 export type LineKind = "plain" | "accent" | "error" | "dim" | "green";
 
@@ -18,6 +19,8 @@ export type TermAction =
   | { type: "download"; href: string }
   | { type: "matrix" }
   | { type: "selfdestruct" } // rm -rf / sequence, handled by the component
+  | { type: "theme"; theme: TermTheme } // swap terminal colors
+  | { type: "pacman"; op: "install" | "upgrade"; packages: string[] } // animated fake package manager
   | { type: "exit" }; // close the terminal
 
 export type CommandResult = {

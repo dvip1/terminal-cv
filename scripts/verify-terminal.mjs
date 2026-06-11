@@ -90,10 +90,13 @@ await page.waitForTimeout(400);
 const persisted = (await term.innerText()).includes("stuck in vim");
 log("SESSION PERSISTED ACROSS CLOSE: " + persisted);
 
-// sudo hire-me easter egg (data-driven file)
-await run("sudo hire-me", 1200);
+// hire-me easter egg (data-driven file); sudo must be denied first
+await run("sudo hire-me", 600);
+const sudoDenied = (await term.innerText()).includes("sudo: not required");
+log("SUDO DENIED: " + sudoDenied);
+await run("hire-me", 1200);
 await page.waitForURL("**/contact", { timeout: 5000 }).catch(() => {});
-log("SUDO HIRE-ME -> " + page.url());
+log("HIRE-ME -> " + page.url());
 await page.screenshot({ path: `${shots}/06-contact-after-hireme.png` });
 
 // mobile chips probe

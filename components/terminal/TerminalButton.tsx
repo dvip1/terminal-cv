@@ -10,7 +10,7 @@ export function TerminalButton() {
       onClick={toggle}
       aria-label="Open terminal"
       title="Open terminal (or press `)"
-      className="font-mono text-xs text-muted hover:text-accent transition-colors border border-border rounded px-1.5 py-0.5"
+      className="term-glint font-mono text-xs text-muted hover:text-accent transition-colors border border-border rounded px-1.5 py-0.5"
     >
       &gt;_
     </button>

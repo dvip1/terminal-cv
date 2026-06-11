@@ -1,6 +1,7 @@
 import { bio, education, experience, site, skills } from "@/content/site";
 import { getProject } from "@/content/projects";
 import type { Command, CommandContext, CommandResult, TermLine } from "./types";
+import { DEFAULT_THEME_NAME, findTheme, savedThemeName, termThemes } from "./themes";
 import { buildVfs, getNode, postSlug, resolvePath } from "./vfs";
 
 const err = (text: string): TermLine => ({ text, kind: "error" });
@@ -365,6 +366,116 @@ export const commands: Command[] = [
     }),
   },
   {
+    name: "pacman",
+    description: "package manager (arch, btw)",
+    usage: "pacman -S <pkg>",
+    run: (args) => {
+      if (args.length === 0) {
+        return { lines: [err("error: no operation specified (use -h for help)")] };
+      }
+      const op = args.find((a) => a.startsWith("-")) ?? "";
+      const targets = args.filter((a) => !a.startsWith("-"));
+      if (op === "-h" || op === "--help") {
+        return {
+          lines: [
+            { text: "usage:  pacman <operation> [...]" },
+            { text: "operations:" },
+            { text: "  pacman -S <package>   install something (try: pacman -S job)" },
+            { text: "  pacman -Syu           full system upgrade" },
+            { text: "  pacman -Q             list installed packages" },
+            { text: "  pacman -R <package>   good luck" },
+          ],
+        };
+      }
+      if (/^-Q/.test(op)) {
+        return {
+          lines: [
+            { text: "linux-tinkering 6.1.0-arch1" },
+            { text: "typescript 5.9.2" },
+            { text: "rs485-whispering 2.4.1" },
+            { text: "yolo-v8n 97.0-accuracy" },
+            { text: "websockets-low-latency 0.0.1" },
+            { text: "caffeine 9.9.9-lts" },
+            dim("6 packages installed — this system runs lean."),
+          ],
+        };
+      }
+      if (/^-R/.test(op)) {
+        return {
+          lines: [
+            err(`error: target not found: ${targets[0] ?? "<nothing>"}`),
+            dim("nothing on this system is removable. it all ships."),
+          ],
+        };
+      }
+      if (/^-S/.test(op)) {
+        if (targets.length > 0) {
+          return { action: { type: "pacman", op: "install", packages: targets } };
+        }
+        // -Sy / -Su / -Syu with no targets → system upgrade
+        if (op.length > 2) {
+          return { action: { type: "pacman", op: "upgrade", packages: [] } };
+        }
+        return { lines: [err("error: no targets specified (use -h for help)")] };
+      }
+      return { lines: [err(`error: invalid option '${op}'`)] };
+    },
+  },
+  {
+    name: "theme",
+    description: "switch terminal colors",
+    usage: "theme <name>",
+    run: (args) => {
+      const arg = args.find((a) => !a.startsWith("-"))?.toLowerCase();
+      if (!arg || arg === "list" || arg === "ls") {
+        const current = savedThemeName();
+        const width = Math.max(...termThemes.map((t) => t.name.length)) + 2;
+        return {
+          lines: [
+            dim("terminal themes:"),
+            ...termThemes.map(
+              (t): TermLine => ({
+                text: `  ${t.name.padEnd(width)} ${t.blurb}`,
+                spans: [
+                  { text: "  " },
+                  { text: t.name.padEnd(width), kind: t.name === current ? "accent" : undefined },
+                  { text: t.blurb, kind: "dim" },
+                  ...(t.name === current ? [{ text: "  ← current", kind: "green" as const }] : []),
+                ],
+              })
+            ),
+            { text: "" },
+            dim("theme <name> to switch — your pick is remembered."),
+          ],
+        };
+      }
+      const theme = findTheme(arg === "default" || arg === "reset" ? DEFAULT_THEME_NAME : arg);
+      if (!theme) return { lines: [err(`theme: ${arg}: not found — try 'theme list'`)] };
+      return {
+        lines: [
+          {
+            text: `theme set to ${theme.name}`,
+            spans: [{ text: "theme set to " }, { text: theme.name, kind: "accent" }],
+          },
+          {
+            text: "  accent · dim · error · green",
+            spans: [
+              { text: "  " },
+              { text: "accent", kind: "accent" },
+              { text: " · " },
+              { text: "dim", kind: "dim" },
+              { text: " · " },
+              { text: "error", kind: "error" },
+              { text: " · " },
+              { text: "green", kind: "green" },
+            ],
+          },
+        ],
+        action: { type: "theme", theme },
+      };
+    },
+  },
+  {
     name: "pwd",
     description: "print working directory",
     hidden: true,
@@ -423,5 +534,6 @@ export function findCommand(name: string): Command | undefined {
   const n = name.toLowerCase();
   // vi/nvim/emacs all lead to the same place.
   if (n === "vi" || n === "nvim") return commands.find((c) => c.name === "vim");
+  if (n === "themes") return commands.find((c) => c.name === "theme");
   return commands.find((c) => c.name === n);
 }

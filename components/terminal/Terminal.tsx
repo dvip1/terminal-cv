@@ -12,6 +12,7 @@ import {
 import type { Post } from "@/content/writing";
 import { TerminalEngine } from "./engine";
 import { MatrixRain } from "./MatrixRain";
+import { applyTermTheme, restoreTermTheme } from "./themes";
 import type { CommandResult, TermLine } from "./types";
 
 type Entry = {
@@ -70,6 +71,11 @@ export function Terminal({
 
   const reducedMotion = useReducedMotion();
 
+  // Re-apply the visitor's persisted color scheme (see themes.ts).
+  useEffect(() => {
+    restoreTermTheme();
+  }, []);
+
   /* ── output helpers ─────────────────────────────────────────────── */
 
   const pushEntry = useCallback(
@@ -84,6 +90,11 @@ export function Terminal({
     },
     [reducedMotion]
   );
+
+  // Rewrite an existing entry's lines in place (used for progress bars).
+  const updateEntry = useCallback((id: number, lines: TermLine[]) => {
+    setEntries((prev) => prev.map((e) => (e.id === id ? { ...e, lines } : e)));
+  }, []);
 
   const finishReveal = useCallback(() => {
     setAnimId(null);
@@ -153,6 +164,100 @@ export function Terminal({
     setBusy(false);
   }, [pushEntry, reducedMotion]);
 
+  /* ── pacman install/upgrade sequence ────────────────────────────── */
+
+  const runPacman = useCallback(
+    async (op: "install" | "upgrade", packages: string[]) => {
+      setBusy(true);
+      try {
+        if (op === "upgrade") {
+          const dbs = ["core", "extra", "multilib"];
+          if (reducedMotion) {
+            pushEntry({
+              lines: [
+                { text: ":: Synchronizing package databases...", kind: "dim" },
+                ...dbs.map((d) => ({
+                  text: ` ${d.padEnd(10)} ${pacbar(100)}`,
+                  kind: "green" as const,
+                })),
+                { text: ":: Starting full system upgrade...", kind: "dim" },
+                { text: "resolving dependencies..." },
+                { text: "" },
+                { text: "there is nothing to do — dvip is already running the latest version.", kind: "accent" },
+              ],
+            });
+            return;
+          }
+          pushEntry({ lines: [{ text: ":: Synchronizing package databases...", kind: "dim" }] });
+          for (const db of dbs) {
+            const id = pushEntry({ lines: [{ text: ` ${db.padEnd(10)} ${pacbar(0)}` }] });
+            for (const pct of PAC_STEPS) {
+              await sleep(70);
+              updateEntry(id, [
+                { text: ` ${db.padEnd(10)} ${pacbar(pct)}`, kind: pct === 100 ? "green" : undefined },
+              ]);
+            }
+          }
+          pushEntry({ lines: [{ text: ":: Starting full system upgrade...", kind: "dim" }] });
+          await sleep(350);
+          pushEntry({ lines: [{ text: "resolving dependencies..." }] });
+          await sleep(350);
+          pushEntry({
+            lines: [
+              { text: "" },
+              { text: "there is nothing to do — dvip is already running the latest version.", kind: "accent" },
+            ],
+          });
+          return;
+        }
+
+        const n = packages.length;
+        const header: TermLine[] = [
+          { text: "resolving dependencies..." },
+          { text: "looking for conflicting packages..." },
+          { text: "" },
+          { text: `Packages (${n})  ${packages.join("  ")}` },
+          { text: "" },
+          { text: ":: Proceed with installation? [Y/n] y", kind: "dim" },
+        ];
+        const footer: TermLine[] = [
+          { text: "" },
+          { text: "optional dependencies detected:", kind: "dim" },
+          { text: "    dvip: full-stack engineer — resolve with 'hire-me'", kind: "accent" },
+        ];
+        if (reducedMotion) {
+          pushEntry({
+            lines: [
+              ...header,
+              ...packages.map((p, i) => ({
+                text: `(${i + 1}/${n}) installing ${p} ${pacbar(100)}`,
+                kind: "green" as const,
+              })),
+              ...footer,
+            ],
+          });
+          return;
+        }
+        pushEntry({ lines: header }, true);
+        await sleep(450);
+        for (let i = 0; i < n; i++) {
+          const label = `(${i + 1}/${n}) installing ${packages[i]}`;
+          const id = pushEntry({ lines: [{ text: `${label} ${pacbar(0)}` }] });
+          for (const pct of PAC_STEPS) {
+            await sleep(80);
+            updateEntry(id, [
+              { text: `${label} ${pacbar(pct)}`, kind: pct === 100 ? "green" : undefined },
+            ]);
+          }
+        }
+        pushEntry({ lines: footer });
+      } finally {
+        setBusy(false);
+      }
+    },
+    [pushEntry, reducedMotion, updateEntry]
+  );
+
   /* ── command execution ──────────────────────────────────────────── */
 
   const applyResult = useCallback(
@@ -198,12 +303,18 @@ export function Terminal({
         case "selfdestruct":
           void selfDestruct();
           break;
+        case "theme":
+          applyTermTheme(res.action.theme);
+          break;
+        case "pacman":
+          void runPacman(res.action.op, res.action.packages);
+          break;
         case "exit":
           onClose();
           break;
       }
     },
-    [onClose, pushEntry, reducedMotion, router, selfDestruct]
+    [onClose, pushEntry, reducedMotion, router, runPacman, selfDestruct]
   );
 
   const runCommand = useCallback(
@@ -480,4 +591,13 @@ function useReducedMotion(): boolean {
 
 function sleep(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms));
+}
+
+/* pacman-style progress bar: [########------------]  40% */
+const PAC_STEPS = [9, 23, 41, 58, 76, 100];
+
+function pacbar(pct: number): string {
+  const width = 20;
+  const filled = Math.round((pct / 100) * width);
+  return `[${"#".repeat(filled)}${"-".repeat(width - filled)}] ${String(pct).padStart(3)}%`;
 }

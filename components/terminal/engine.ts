@@ -1,6 +1,7 @@
 import { easterEggs, type EasterEgg, type EggLine } from "@/content/easter-eggs";
 import type { Post } from "@/content/writing";
 import { commands, findCommand } from "./commands";
+import { termThemes } from "./themes";
 import type {
   CommandContext,
   CommandResult,
@@ -40,20 +41,29 @@ export class TerminalEngine {
     const egg = matchEgg(input);
     if (egg) return eggToResult(egg);
 
-    // `sudo X` — strip the sudo and run X like a real lax sysadmin.
-    if (/^sudo\s/i.test(input)) {
-      const rest = input.replace(/^sudo\s+/i, "");
-      const restEgg = matchEgg(rest);
-      if (restEgg) return eggToResult(restEgg);
-      const [name, ...args] = rest.split(" ");
-      const cmd = findCommand(name);
-      if (cmd) return cmd.run(args, this.ctx(rest));
+    // `sudo X` — nobody gets root here, no exceptions. Escalation on this
+    // system goes through hiring, and hiring happens in userspace: `hire-me`.
+    if (/^sudo(\s|$)/i.test(input)) {
+      const rest = input.replace(/^sudo\s*/i, "");
+      if (matchEgg(rest)) {
+        // `sudo hire-me` and friends — so close, and sudo isn't even needed.
+        return {
+          lines: [
+            { text: "sudo: not required — that one runs in userspace.", kind: "error" },
+            { text: `try: ${rest}`, kind: "accent" },
+          ],
+        };
+      }
       return {
         lines: [
+          { text: "[sudo] password for guest: ", kind: "dim" },
           {
-            text: `${name}: command not found. Also: you are not in the sudoers file. This incident will be reported.`,
+            text: "sudo: guest is not in the sudoers file. This incident will be reported.",
             kind: "error",
           },
+          { text: "you don't have enough permissions on this system." },
+          { text: "root access is granted exclusively through hiring me." },
+          { text: "try: hire-me", kind: "accent" },
         ],
       };
     }
@@ -121,8 +131,26 @@ export class TerminalEngine {
       return {};
     }
 
-    // Path argument for filesystem-ish commands.
     const cmdName = tokens[0].toLowerCase();
+
+    // Theme name argument for `theme <name>`.
+    if (cmdName === "theme" || cmdName === "themes") {
+      if (tokens.length > 2 || (tokens.length === 2 && endsWithSpace)) return {};
+      const partial = endsWithSpace ? "" : tokens[tokens.length - 1].toLowerCase();
+      const matches = termThemes
+        .map((t) => t.name)
+        .filter((n) => n.startsWith(partial));
+      if (matches.length === 1) {
+        const head = endsWithSpace
+          ? input
+          : input.slice(0, input.length - partial.length);
+        return { completed: head + matches[0] };
+      }
+      if (matches.length > 1) return { candidates: matches };
+      return {};
+    }
+
+    // Path argument for filesystem-ish commands.
     if (!["ls", "cd", "cat", "open"].includes(cmdName)) return {};
     const partial = endsWithSpace ? "" : tokens[tokens.length - 1];
     const lastSlash = partial.lastIndexOf("/");

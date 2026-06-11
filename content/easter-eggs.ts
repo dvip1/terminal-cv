@@ -41,10 +41,10 @@ export type EasterEgg = {
 
 export const easterEggs: EasterEgg[] = [
   {
-    input: "sudo hire-me",
-    aliases: ["sudo hire me"],
+    input: "hire-me",
+    aliases: ["hire me"],
     output: [
-      { text: "[sudo] password for recruiter: ********", kind: "dim" },
+      { text: "verifying credentials... done.", kind: "dim" },
       { text: "Permission granted.", kind: "accent" },
       "Routing you to the contact page...",
     ],
@@ -52,7 +52,6 @@ export const easterEggs: EasterEgg[] = [
   },
   {
     input: "pacman -S job",
-    aliases: ["sudo pacman -S job"],
     output: [
       "resolving dependencies...",
       "looking for conflicting packages...",
