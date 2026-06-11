@@ -121,6 +121,44 @@ body {
   font-size: 0.875em;
 }
 
+/* ── Cursor caret ──────────────────────────────────────────────────
+   The terminal's block cursor, escaped into the page. Chases the
+   pointer (see components/CursorCaret.tsx), blinks at rest, flattens
+   to an underscore over interactive elements. Native cursor stays. */
+
+.cursor-caret {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 14px;
+  border-radius: 1px;
+  background: var(--accent);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 100;
+  transition: opacity 250ms ease, width 180ms ease, height 180ms ease;
+  will-change: transform;
+}
+.cursor-caret-active {
+  /* block → underscore: the caret's "you can type here" shape */
+  width: 13px;
+  height: 3px;
+  opacity: 0.55;
+}
+@keyframes caret-blink-soft {
+  0%, 49% { opacity: 0.3; }
+  50%, 100% { opacity: 0; }
+}
+.cursor-caret-idle {
+  animation: caret-blink-soft 1.06s step-end infinite;
+}
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor-caret {
+    display: none;
+  }
+}
+
 /* ── Terminal button glint ─────────────────────────────────────────
    The >_ button is the door to the site's main feature, so it gets a
    faint accent-tinted border and a soft shine that sweeps across every

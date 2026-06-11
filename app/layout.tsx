@@ -5,6 +5,7 @@ import { site } from "@/content/site";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ConsoleBanner } from "@/components/ConsoleBanner";
+import { CursorCaret } from "@/components/CursorCaret";
 import { TerminalProvider } from "@/components/terminal/TerminalProvider";
 import { getLatestPosts } from "@/lib/blog";
 
@@ -70,6 +71,7 @@ export default async function RootLayout({
           <Footer />
         </TerminalProvider>
         <ConsoleBanner />
+        <CursorCaret />
       </body>
     </html>
   );
