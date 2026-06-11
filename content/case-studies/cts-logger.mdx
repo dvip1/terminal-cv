@@ -1,0 +1,39 @@
+CTS Logger is an industrial data-acquisition application that has run in
+production for six months without losing a single reading. It speaks two
+transports at once — RS485/COM serial and WiFi/HTTP — to more than 70
+concurrent devices on a factory floor.
+
+## The problem
+
+The plant had a mixed fleet of instruments: legacy meters that only speak
+Modbus-style serial over RS485, and newer IoT devices that report over HTTP.
+Existing tooling assumed one transport or the other, and polling 70+ devices
+naively meant duplicate commands piling up whenever a device responded slowly —
+which on a shared serial bus means collisions, garbage frames, and lost data.
+
+## The design
+
+The application is an Electron shell around a Node.js acquisition core, so the
+operators get a desktop UI while the engine runs the same on any machine.
+
+**Dual transport, one pipeline.** Serial (RS485/COM) and network (WiFi/HTTP)
+devices are abstracted behind a common device interface. The acquisition
+scheduler doesn't know or care which wire a reading arrives on; transport
+adapters handle framing, retries, and timeouts per medium.
+
+**Command queue with auto-deduplication.** Every outbound request goes through
+a central queue. If a poll for a device is already pending, an identical
+request is deduplicated instead of enqueued — so a slow device can never cause
+a backlog of redundant commands, and the serial bus stays clean under load.
+
+**Designed for not losing data.** Readings are persisted before they are
+acknowledged, writes are append-first, and the pipeline recovers from device
+disconnects, bus errors, and process restarts without dropping buffered
+readings.
+
+## Results
+
+- **70+ devices** polled concurrently across two transports
+- **6 months** of production uptime
+- **Zero data loss** over that entire period
+- Operators add and reconfigure devices without touching code

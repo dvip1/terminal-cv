@@ -1,0 +1,43 @@
+A factory-floor Andon monitoring platform built for Mahindra Aeronautics —
+React and Node end to end, with role-based access for everyone from operators
+to plant management, and an AI analytics chatbot that lets non-technical staff
+query production data in plain language.
+
+## The problem
+
+Andon systems surface line stoppages and alerts in real time, but the data
+they accumulate is only useful if people can interrogate it. Management wanted
+answers like "which station had the most downtime last week?" without waiting
+on someone to write SQL — and without giving an LLM the keys to a production
+database.
+
+## The design
+
+**Monitoring core.** A React/Node platform streaming live Andon state to the
+floor and to dashboards, with multi-level RBAC so operators, supervisors, and
+management each see exactly the scope they're responsible for.
+
+**Text-to-SQL chatbot, treated as a security problem.** The analytics chatbot
+is powered by Gemma translating natural-language questions into SQL. An LLM
+that writes queries against your production database is an injection surface,
+so it is sandboxed in three layers:
+
+1. **Prompt design** constrains the model to the analytics schema and
+   read-only intent.
+2. **Regex filtering** validates the generated SQL before execution —
+   anything that isn't a plain `SELECT` against permitted tables is rejected.
+3. **A read-only, scoped database role** is the backstop: even a query that
+   slipped past both layers physically cannot write, and cannot see tables
+   outside its scope.
+
+**Dynamic JSON→charts engine.** Query results come back as structured JSON
+and a rendering engine picks and configures the right visualization at
+runtime — so the chatbot can answer questions with charts nobody explicitly
+built a dashboard for.
+
+## Results
+
+- Deployed for **Mahindra Aeronautics** factory-floor monitoring
+- **Multi-level RBAC** across operator, supervisor, and management roles
+- Natural-language analytics with **defense-in-depth** around the LLM
+- Charts generated dynamically from any query result shape

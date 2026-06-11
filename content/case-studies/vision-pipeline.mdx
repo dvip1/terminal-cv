@@ -1,0 +1,33 @@
+A real-time computer-vision pipeline that watches conveyor belts and detects
+objects with 97% accuracy — while never blowing its 50-millisecond frame
+budget at 20 FPS.
+
+## The problem
+
+Object detection on a conveyor belt is unforgiving in a way offline ML is not:
+the belt does not pause while you infer. If a frame takes too long, you either
+fall behind the live feed or silently drop product. The system needed to handle
+two camera streams concurrently, on real hardware, with latency you can see.
+
+## The design
+
+**Detection.** YOLOv8n — the nano variant — chosen deliberately: the smallest
+model that hit the accuracy bar, leaving headroom in the frame budget for
+everything that isn't inference.
+
+**Streaming.** Camera feeds are ingested through MediaMTX, and results are
+pushed to clients over FastAPI WebSockets, keeping the browser view close to
+live rather than polling.
+
+**The StreamProfiler.** The piece that makes it production software rather
+than a demo: a custom profiler that instruments every stage of the pipeline —
+capture, decode, inference, post-processing, publish — per stream, per frame.
+It tracks where the budget goes and flags any stage that threatens the 50ms
+ceiling, so degradation is visible and attributable instead of mysterious.
+
+## Results
+
+- **2 concurrent streams** processed in real time
+- **97% detection accuracy** on the production object classes
+- **&lt;50ms frame budget** held at a stable **20 FPS**
+- Per-stage latency visibility via the custom StreamProfiler
