@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(pnpm build *)"
+      "PowerShell(pnpm build *)",
+      "PowerShell(npx tsc --noEmit)",
+      "PowerShell(npm run *)"
     ]
   }
 }

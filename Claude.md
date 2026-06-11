@@ -83,7 +83,7 @@ This is the heart of the design. Implement all of the following:
 - `cat resume.pdf` — "rendering binary…" joke, then triggers actual resume download.
 
 ### Easter eggs (curated — do not add more than these)
-- `sudo hire-me` — "Permission granted." → routes to /contact.
+- `hire-me` — "Permission granted." → routes to /contact. Any `sudo` command is denied ("you don't have enough permissions — root access is granted exclusively through hiring me"); sudo never executes anything.
 - `rm -rf /` — fake panic: lines of the page "delete", brief glitch, then a mock reboot back to the prompt with "nice try."
 - `vim` — traps the user: "You are now stuck in vim." Only `:q!` escapes.
 - `pacman -S job` — "resolving dependencies: motivation, caffeine, low-latency websockets…"
