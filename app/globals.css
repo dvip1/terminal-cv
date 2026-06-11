@@ -121,6 +121,35 @@ body {
   font-size: 0.875em;
 }
 
+/* ── Terminal button glint ─────────────────────────────────────────
+   The >_ button is the door to the site's main feature, so it gets a
+   faint accent-tinted border and a soft shine that sweeps across every
+   few seconds. Accent at low opacity — a glance-catcher, not a beacon. */
+
+.term-glint {
+  position: relative;
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+}
+.term-glint::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    color-mix(in srgb, var(--accent) 18%, transparent) 50%,
+    transparent 65%
+  );
+  transform: translateX(-100%);
+  animation: glint-sweep 7s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes glint-sweep {
+  0%, 76% { transform: translateX(-100%); }
+  88%, 100% { transform: translateX(100%); }
+}
+
 /* ── Terminal ──────────────────────────────────────────────────────── */
 
 .terminal-overlay {
@@ -161,6 +190,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .terminal-overlay {
     transition: none;
+  }
+  /* no sweep — the tinted border stays as the static cue */
+  .term-glint::after {
+    animation: none;
   }
   .term-cursor {
     animation: none;
