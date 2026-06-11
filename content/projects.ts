@@ -50,7 +50,7 @@ export const projects: Project[] = [
     slug: "andon-monitoring",
     title: "Andon monitoring & AI analytics",
     oneliner:
-      "Factory-floor monitoring for Mahindra Aeronautics with an LLM analytics chatbot.",
+      "Factory-floor monitoring with an LLM analytics chatbot.",
     summary:
       "A React/Node Andon monitoring platform for Mahindra Aeronautics with multi-level RBAC and a Gemma-powered text-to-SQL analytics chatbot — secured through prompt design, regex output filtering, and a read-only scoped database role — plus a dynamic JSON→charts rendering engine.",
     stack: ["React", "Node.js", "PostgreSQL", "Gemma", "RBAC"],

@@ -21,7 +21,8 @@ export async function getLatestPosts(limit = 10): Promise<Post[]> {
         const date = pubDate ? toISODate(pubDate) : undefined;
         return { title, url, date };
       })
-      .filter((p) => p.title && p.url)
+      // posts only — guards against a feed that also lists regular pages
+      .filter((p) => p.title && p.url.includes("/posts/"))
       .slice(0, limit);
     return items.length > 0 ? items : fallbackPosts;
   } catch {

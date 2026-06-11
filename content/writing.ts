@@ -10,8 +10,9 @@ export type Post = {
   date?: string; // ISO date when known
 };
 
-// Hugo feed — confirmed live at this path.
-export const rssUrl = "https://blogs.dvippatel.in/index.xml";
+// Hugo section feed — posts only. The site-wide /index.xml also lists
+// regular pages (privacy policy etc.), so don't use that one.
+export const rssUrl = "https://blogs.dvippatel.in/posts/index.xml";
 
 export const fallbackPosts: Post[] = [
   {
