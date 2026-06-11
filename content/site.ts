@@ -10,7 +10,7 @@ export const site = {
   thesis:
     "I build resilient real-time systems — from RS485 wires to production AI pipelines.",
   location: "Mumbai, India",
-  email: "dvipatwork@gmail.com",
+  email: "dvipatwork@outlook.com",
   github: "https://github.com/dvip1",
   githubHandle: "dvip1",
   linkedin: "https://www.linkedin.com/in/dvip-patel-23320a230",

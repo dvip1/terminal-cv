@@ -6,7 +6,7 @@ Build spec for Claude Code. This is an already-initialized Next.js project (App 
 
 Dvip Patel — full-stack engineer working the entire stack: Linux systems and networking up to production AI pipelines. Builds resilient real-time monitoring software with hardware integration (RS485/COM, WiFi IoT) and real-time vision pipelines.
 
-- Email: dvipatwork@gmail.com
+- Email: dvipatwork@outlook.com
 - GitHub: github.com/dvip1
 - LinkedIn: linkedin.com/in/dvip-patel-23320a230
 - Blog: blogs.dvippatel.in

@@ -5,7 +5,7 @@ import { writeFileSync } from "node:fs";
 
 const lines = [
   "Dvip Patel — Full-stack engineer",
-  "dvipatwork@gmail.com | github.com/dvip1",
+  "dvipatwork@outlook.com | github.com/dvip1",
   "",
   "(placeholder — replace public/resume.pdf with the real resume)",
 ];
