@@ -1,22 +1,24 @@
 @import "tailwindcss";
 
 /* ── Theme tokens ──────────────────────────────────────────────────────
-   One accent (Arch blue) ties both modes together: link/hover color in
-   editorial mode, prompt color in the terminal. data-theme is set by an
-   inline script in layout.tsx before paint. */
+   One accent (amber phosphor) ties both modes together: link/hover color
+   in editorial mode, prompt color in the terminal — a nod to amber CRTs.
+   Neutrals are tinted toward the accent (warm paper, warm grays) so it
+   reads as a palette, not a tint. data-theme is set by an inline script
+   in layout.tsx before paint. */
 
 :root {
-  --background: #fdfdfc;
-  --foreground: #1a1d21;
-  --muted: #5d646e;
-  --border: #e4e2dd;
-  --accent: #0b6e9e;
+  --background: #fdfcf8;
+  --foreground: #211e18;
+  --muted: #6d6353;
+  --border: #e9e3d6;
+  --accent: #b45309;
 
-  /* terminal is near-black regardless of site theme */
-  --term-bg: rgba(9, 13, 17, 0.97);
-  --term-fg: #ccd6e0;
-  --term-accent: #58b7e8;
-  --term-dim: #6b7785;
+  /* terminal is near-black (warm) regardless of site theme */
+  --term-bg: rgba(17, 13, 9, 0.97);
+  --term-fg: #d8d2c4;
+  --term-accent: #e8a33d;
+  --term-dim: #857a68;
   --term-error: #e8705f;
   --term-green: #57c97a;
 
@@ -24,11 +26,11 @@
 }
 
 [data-theme="dark"] {
-  --background: #0e1116;
-  --foreground: #d9dee5;
-  --muted: #8a93a0;
-  --border: #232930;
-  --accent: #58b7e8;
+  --background: #13110c;
+  --foreground: #e2dcd0;
+  --muted: #998f7e;
+  --border: #2a261d;
+  --accent: #e8a33d;
   color-scheme: dark;
 }
 

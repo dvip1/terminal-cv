@@ -18,21 +18,21 @@ export function renderOgImage(title: string, subtitle?: string) {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          backgroundColor: "#0a0e12",
-          color: "#ccd6e0",
+          backgroundColor: "#0d0a07",
+          color: "#d8d2c4",
         }}
       >
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            border: "1px solid #232930",
+            border: "1px solid #2a261d",
             borderRadius: "12px",
             padding: "48px 56px",
-            backgroundColor: "#0e1318",
+            backgroundColor: "#14100b",
           }}
         >
-          <div style={{ display: "flex", fontSize: 30, color: "#6b7785" }}>
+          <div style={{ display: "flex", fontSize: 30, color: "#857a68" }}>
             dvip@arch ~ $
           </div>
           <div
@@ -42,7 +42,7 @@ export function renderOgImage(title: string, subtitle?: string) {
               marginTop: 28,
               fontSize: 64,
               fontWeight: 700,
-              color: "#58b7e8",
+              color: "#e8a33d",
               lineHeight: 1.15,
             }}
           >
@@ -52,7 +52,7 @@ export function renderOgImage(title: string, subtitle?: string) {
                 width: 30,
                 height: 64,
                 marginLeft: 20,
-                backgroundColor: "#58b7e8",
+                backgroundColor: "#e8a33d",
               }}
             />
           </div>
@@ -62,7 +62,7 @@ export function renderOgImage(title: string, subtitle?: string) {
                 display: "flex",
                 marginTop: 28,
                 fontSize: 30,
-                color: "#8a93a0",
+                color: "#998f7e",
                 lineHeight: 1.4,
               }}
             >
@@ -75,7 +75,7 @@ export function renderOgImage(title: string, subtitle?: string) {
             display: "flex",
             marginTop: 40,
             fontSize: 26,
-            color: "#6b7785",
+            color: "#857a68",
           }}
         >
           dvippatel.in — resilient real-time systems, from RS485 wires to AI pipelines

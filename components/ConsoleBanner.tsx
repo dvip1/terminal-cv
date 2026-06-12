@@ -20,7 +20,7 @@ export function ConsoleBanner() {
     // Reward for opening devtools: tell them about the terminal.
     console.log(
       `%c${banner}%c\n  you found the console. there's a better one — press \` on the page.\n`,
-      "color:#58b7e8;font-family:monospace",
+      "color:#e8a33d;font-family:monospace",
       "color:inherit"
     );
   }, []);

@@ -26,12 +26,12 @@ const STORAGE_KEY = "term-theme";
 export const termThemes: TermTheme[] = [
   {
     name: "arch",
-    blurb: "house default — Arch blue on near-black",
+    blurb: "house default — amber phosphor on warm black",
     colors: {
-      bg: "rgba(9, 13, 17, 0.97)",
-      fg: "#ccd6e0",
-      accent: "#58b7e8",
-      dim: "#6b7785",
+      bg: "rgba(17, 13, 9, 0.97)",
+      fg: "#d8d2c4",
+      accent: "#e8a33d",
+      dim: "#857a68",
       error: "#e8705f",
       green: "#57c97a",
     },
