@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { ConsoleBanner } from "@/components/ConsoleBanner";
 import { CursorCaret } from "@/components/CursorCaret";
 import { TerminalProvider } from "@/components/terminal/TerminalProvider";
+import { WmHotkeys } from "@/components/wm/WmHotkeys";
 import { getLatestPosts } from "@/lib/blog";
 
 const fraunces = Fraunces({
@@ -43,8 +44,10 @@ export const metadata: Metadata = {
   },
 };
 
-/* Runs before paint: resolve theme from localStorage, else system. */
-const themeInit = `(function(){try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){}})()`;
+/* Runs before paint: resolve theme from localStorage, else system.
+   Also restores WM mode (desktop-only window-manager presentation —
+   the attribute is harmless below the CSS breakpoint). */
+const themeInit = `(function(){try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t;if(localStorage.getItem("wm")==="on")document.documentElement.dataset.wm="on"}catch(e){}})()`;
 
 export default async function RootLayout({
   children,
@@ -64,6 +67,7 @@ export default async function RootLayout({
       <body suppressHydrationWarning className="min-h-full flex flex-col">
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
         <TerminalProvider posts={posts}>
+          <WmHotkeys />
           <Header />
           <main className="flex-1 w-full max-w-2xl mx-auto px-6">
             {children}
