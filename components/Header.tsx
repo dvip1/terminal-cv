@@ -4,17 +4,23 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { TerminalButton } from "@/components/terminal/TerminalButton";
 
 export function Header() {
+  /* Mobile: name + buttons share the top row, links get a full row below.
+     ≥sm: one row — name left; links, then buttons (order-last), right. */
   return (
-    <header className="w-full max-w-2xl mx-auto px-6 pt-8 pb-10 sm:pb-12 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3">
+    <header className="w-full max-w-2xl mx-auto px-6 pt-8 pb-10 sm:pb-12 flex flex-wrap items-baseline justify-between gap-y-3">
       <Link
         href="/"
         className="whitespace-nowrap font-serif text-lg font-semibold tracking-tight hover:text-accent transition-colors"
       >
         {site.header_name}
       </Link>
+      <div className="flex items-baseline gap-3 sm:order-last sm:ml-5">
+        <TerminalButton />
+        <ThemeToggle />
+      </div>
       <nav
         aria-label="Main"
-        className="flex flex-wrap items-baseline gap-x-4 gap-y-2 sm:gap-x-5 text-sm"
+        className="w-full sm:w-auto sm:ml-auto flex items-baseline gap-x-5 text-sm"
       >
         {nav.map((item) => (
           <Link
@@ -25,8 +31,6 @@ export function Header() {
             {item.label}
           </Link>
         ))}
-        <TerminalButton />
-        <ThemeToggle />
       </nav>
     </header>
   );
