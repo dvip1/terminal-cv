@@ -17,7 +17,9 @@ export function Header() {
         href="/"
         className="wm-identity whitespace-nowrap font-serif text-lg font-semibold tracking-tight hover:text-accent transition-colors"
       >
-        <span className="wm-hide">{site.header_name}</span>
+        <span className="wm-hide" aria-label={site.header_name}>
+          {site.header_name}
+        </span>
         <span className="wm-show font-mono text-sm font-medium">dvip@arch</span>
       </Link>
       <div className="wm-modules flex items-baseline gap-3 sm:order-last sm:ml-5">
