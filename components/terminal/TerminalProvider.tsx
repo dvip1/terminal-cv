@@ -70,6 +70,16 @@ export function TerminalProvider({
     setIsOpen(true);
   }
 
+  // Mirror open state onto <html> so WM mode can tile the page window
+  // beside the terminal with pure CSS ([data-wm="on"][data-term-open]).
+  useEffect(() => {
+    if (isOpen) {
+      document.documentElement.dataset.termOpen = "true";
+    } else {
+      delete document.documentElement.dataset.termOpen;
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {

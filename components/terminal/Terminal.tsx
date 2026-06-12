@@ -10,6 +10,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import type { Post } from "@/content/writing";
+import { toggleWm } from "@/components/wm/wm-mode";
 import { TerminalEngine } from "./engine";
 import { MatrixRain } from "./MatrixRain";
 import { applyTermTheme, restoreTermTheme } from "./themes";
@@ -309,6 +310,9 @@ export function Terminal({
         case "pacman":
           void runPacman(res.action.op, res.action.packages);
           break;
+        case "wm-toggle":
+          toggleWm();
+          break;
         case "exit":
           onClose();
           break;
@@ -410,7 +414,7 @@ export function Terminal({
       <div
         aria-hidden="true"
         onClick={onClose}
-        className={`fixed inset-0 z-40 bg-black/45 transition-opacity duration-300 ${
+        className={`terminal-backdrop fixed inset-0 z-40 bg-black/45 transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />

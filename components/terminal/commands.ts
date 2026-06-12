@@ -476,6 +476,33 @@ export const commands: Command[] = [
     },
   },
   {
+    name: "wm",
+    description: "toggle hyprland window mode (desktop only)",
+    run: () => {
+      // Terminal only renders client-side; the toggle itself happens in
+      // the component (wm-toggle action) after these lines print.
+      const enabling = document.documentElement.dataset.wm !== "on";
+      const lines: TermLine[] = [
+        {
+          text: `hyprland mode: ${enabling ? "enabled" : "disabled"}`,
+          spans: [
+            { text: "hyprland mode: " },
+            { text: enabling ? "enabled" : "disabled", kind: enabling ? "green" : "dim" },
+          ],
+        },
+      ];
+      if (enabling) {
+        if (window.innerWidth < 1024) {
+          lines.push(dim("(needs a viewport ≥ 1024px — try it on a desktop.)"));
+        } else {
+          lines.push(dim("this terminal is a tile now. ` or esc closes it."));
+          lines.push(dim("keys: 1-4 switch workspaces · t reopens the terminal"));
+        }
+      }
+      return { lines, action: { type: "wm-toggle" } };
+    },
+  },
+  {
     name: "pwd",
     description: "print working directory",
     hidden: true,
@@ -535,5 +562,6 @@ export function findCommand(name: string): Command | undefined {
   // vi/nvim/emacs all lead to the same place.
   if (n === "vi" || n === "nvim") return commands.find((c) => c.name === "vim");
   if (n === "themes") return commands.find((c) => c.name === "theme");
+  if (n === "hyprctl") return commands.find((c) => c.name === "wm");
   return commands.find((c) => c.name === n);
 }

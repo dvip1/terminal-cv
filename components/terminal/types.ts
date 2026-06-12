@@ -21,7 +21,8 @@ export type TermAction =
   | { type: "selfdestruct" } // rm -rf / sequence, handled by the component
   | { type: "theme"; theme: TermTheme } // swap terminal colors
   | { type: "pacman"; op: "install" | "upgrade"; packages: string[] } // animated fake package manager
-  | { type: "exit" }; // close the terminal
+  | { type: "exit" } // close the terminal
+  | { type: "wm-toggle" }; // flip the Hyprland window-manager presentation
 
 export type CommandResult = {
   lines?: TermLine[];
