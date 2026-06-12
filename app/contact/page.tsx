@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { site } from "@/content/site";
+import { riseDelay } from "@/lib/motion";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -21,22 +22,22 @@ const channels = [
 export default function ContactPage() {
   return (
     <div className="py-8">
-      <h1 className="font-serif text-3xl font-semibold tracking-tight">
+      <h1 className="rise font-serif text-3xl font-semibold tracking-tight" style={riseDelay(0)}>
         Contact
       </h1>
-      <p className="mt-4 text-muted max-w-prose leading-relaxed">
+      <p className="rise mt-4 text-muted max-w-prose leading-relaxed" style={riseDelay(1)}>
         The fastest way to reach me is email. I read everything.
       </p>
       <ul className="mt-10">
-        {channels.map((c) => (
-          <li key={c.label}>
+        {channels.map((c, i) => (
+          <li key={c.label} className="rise" style={riseDelay(2 + i)}>
             <a
               href={c.href}
               {...(c.href.startsWith("http")
                 ? { target: "_blank", rel: "noopener noreferrer" }
                 : {})}
               {...(c.label === "Resume" ? { download: true } : {})}
-              className="group flex items-baseline justify-between gap-4 border-t border-border py-4"
+              className="group hairline-row flex items-baseline justify-between gap-4 border-t border-border py-4"
             >
               <span className="font-serif text-lg font-medium group-hover:text-accent transition-colors">
                 {c.label}

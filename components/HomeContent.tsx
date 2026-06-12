@@ -2,6 +2,7 @@ import Link from "next/link";
 import { site } from "@/content/site";
 import { projects } from "@/content/projects";
 import { getLatestPosts } from "@/lib/blog";
+import { riseDelay } from "@/lib/motion";
 
 export async function HomeContent() {
   const posts = (await getLatestPosts(3)).slice(0, 3);
@@ -9,25 +10,31 @@ export async function HomeContent() {
   return (
     <div className="py-8">
       <section>
-        <h1 className="font-serif text-4xl sm:text-5xl font-semibold tracking-tight leading-tight">
+        <h1
+          className="rise font-serif text-4xl sm:text-5xl font-semibold tracking-tight leading-tight"
+          style={riseDelay(0)}
+        >
           {site.name}
         </h1>
-        <p className="mt-6 text-lg leading-relaxed max-w-prose">
+        <p className="rise mt-6 text-lg leading-relaxed max-w-prose" style={riseDelay(1)}>
           {site.thesis}
         </p>
-        <p className="mt-3 text-muted leading-relaxed max-w-prose">
+        <p className="rise mt-3 text-muted leading-relaxed max-w-prose" style={riseDelay(2)}>
           Full-stack engineer at KVAR Technologies — Linux systems, hardware
           integration, and real-time vision pipelines.
         </p>
       </section>
 
       <section className="mt-16">
-        <h2 className="font-mono text-xs uppercase tracking-widest text-muted">
+        <h2
+          className="rise font-mono text-xs uppercase tracking-widest text-muted"
+          style={riseDelay(3)}
+        >
           Selected work
         </h2>
         <ul className="mt-5 space-y-7">
-          {projects.map((p) => (
-            <li key={p.slug}>
+          {projects.map((p, i) => (
+            <li key={p.slug} className="rise" style={riseDelay(4 + i)}>
               <Link
                 href={`/projects/${p.slug}`}
                 className="group block"
@@ -44,7 +51,7 @@ export async function HomeContent() {
         </ul>
       </section>
 
-      <section className="mt-16">
+      <section className="rise mt-16" style={riseDelay(7)}>
         <h2 className="font-mono text-xs uppercase tracking-widest text-muted">
           Latest writing
         </h2>

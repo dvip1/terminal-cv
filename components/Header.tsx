@@ -17,7 +17,7 @@ export function Header() {
           <Link
             key={item.href}
             href={item.href}
-            className="text-muted hover:text-accent transition-colors"
+            className="link-grow text-muted hover:text-accent"
           >
             {item.label}
           </Link>

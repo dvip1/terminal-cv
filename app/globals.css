@@ -82,6 +82,55 @@ body {
   text-underline-offset: 3px;
 }
 
+/* ── Entrance rise ─────────────────────────────────────────────────
+   Page content fades up in a quick cascade on load and on client-side
+   navigation. Per-element stagger via --rise (an integer step, set
+   inline with riseDelay() from lib/motion.ts). Opacity + transform
+   only — no layout shift. */
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise-in 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--rise, 0) * 65ms);
+}
+
+/* ── Growing underline ─────────────────────────────────────────────
+   Nav and footer links: a hairline underline that grows from the left
+   on hover, in whatever color the text currently is. */
+
+.link-grow {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 220ms ease, color 150ms ease;
+}
+.link-grow:hover,
+.link-grow:focus-visible {
+  background-size: 100% 1px;
+}
+
+/* ── Hairline row hover ────────────────────────────────────────────
+   Bordered list rows (projects, writing, contact) warm their top
+   hairline toward the accent on hover. */
+
+.hairline-row {
+  transition: border-color 220ms ease;
+}
+.hairline-row:hover,
+.hairline-row:has(a:focus-visible) {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+}
+
 /* ── Case study / MDX typography ─────────────────────────────────── */
 
 .case-study {
@@ -226,6 +275,15 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+  .link-grow {
+    transition: color 150ms ease;
+  }
+  .hairline-row {
+    transition: none;
+  }
   .terminal-overlay {
     transition: none;
   }

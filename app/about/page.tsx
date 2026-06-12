@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { bio, education, experience, site, skills } from "@/content/site";
+import { riseDelay } from "@/lib/motion";
 
 export const metadata: Metadata = {
   title: "About",
@@ -10,15 +11,17 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="py-8">
-      <h1 className="font-serif text-3xl font-semibold tracking-tight">About</h1>
+      <h1 className="rise font-serif text-3xl font-semibold tracking-tight" style={riseDelay(0)}>
+        About
+      </h1>
 
-      <section className="mt-6 space-y-5 max-w-prose leading-relaxed">
+      <section className="rise mt-6 space-y-5 max-w-prose leading-relaxed" style={riseDelay(1)}>
         {bio.long.map((para) => (
           <p key={para.slice(0, 32)}>{para}</p>
         ))}
       </section>
 
-      <section className="mt-14">
+      <section className="rise mt-14" style={riseDelay(2)}>
         <h2 className="font-mono text-xs uppercase tracking-widest text-muted">
           Skills, by layer
         </h2>
@@ -34,7 +37,7 @@ export default function AboutPage() {
         </dl>
       </section>
 
-      <section className="mt-14">
+      <section className="rise mt-14" style={riseDelay(3)}>
         <h2 className="font-mono text-xs uppercase tracking-widest text-muted">
           Experience
         </h2>
@@ -56,7 +59,7 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      <section className="mt-14">
+      <section className="rise mt-14" style={riseDelay(4)}>
         <h2 className="font-mono text-xs uppercase tracking-widest text-muted">
           Education
         </h2>
@@ -71,7 +74,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <p className="mt-14 text-sm text-muted">
+      <p className="rise mt-14 text-sm text-muted" style={riseDelay(5)}>
         Based in {site.location}. Daily driver: {site.os}.
       </p>
     </div>

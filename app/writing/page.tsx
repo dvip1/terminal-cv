@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { site } from "@/content/site";
 import { getLatestPosts } from "@/lib/blog";
+import { riseDelay } from "@/lib/motion";
 
 export const metadata: Metadata = {
   title: "Writing",
@@ -13,10 +14,10 @@ export default async function WritingPage() {
 
   return (
     <div className="py-8">
-      <h1 className="font-serif text-3xl font-semibold tracking-tight">
+      <h1 className="rise font-serif text-3xl font-semibold tracking-tight" style={riseDelay(0)}>
         Writing
       </h1>
-      <p className="mt-4 text-muted max-w-prose leading-relaxed">
+      <p className="rise mt-4 text-muted max-w-prose leading-relaxed" style={riseDelay(1)}>
         Posts live on{" "}
         <a
           href={site.blog}
@@ -29,13 +30,13 @@ export default async function WritingPage() {
         . Latest first.
       </p>
       <ul className="mt-10 space-y-1">
-        {posts.map((post) => (
-          <li key={post.url}>
+        {posts.map((post, i) => (
+          <li key={post.url} className="rise" style={riseDelay(2 + i)}>
             <a
               href={post.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-baseline justify-between gap-4 border-t border-border py-4"
+              className="group hairline-row flex items-baseline justify-between gap-4 border-t border-border py-4"
             >
               <span className="leading-relaxed group-hover:text-accent transition-colors">
                 {post.title}

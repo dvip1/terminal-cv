@@ -3,6 +3,7 @@ import type { ComponentType } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProject, projects } from "@/content/projects";
+import { riseDelay } from "@/lib/motion";
 
 // Static import map: each case-study body is MDX compiled at build time.
 const caseStudies: Record<string, () => Promise<{ default: ComponentType }>> = {
@@ -46,22 +47,28 @@ export default async function CaseStudyPage({
 
   return (
     <article className="py-8">
-      <p className="font-mono text-xs text-muted">
+      <p className="rise font-mono text-xs text-muted" style={riseDelay(0)}>
         <Link href="/projects" className="hover:text-accent transition-colors">
           projects
         </Link>{" "}
         / {project.slug}
       </p>
-      <h1 className="mt-4 font-serif text-3xl sm:text-4xl font-semibold tracking-tight">
+      <h1
+        className="rise mt-4 font-serif text-3xl sm:text-4xl font-semibold tracking-tight"
+        style={riseDelay(1)}
+      >
         {project.title}
       </h1>
-      <p className="mt-4 text-lg text-muted leading-relaxed max-w-prose">
+      <p className="rise mt-4 text-lg text-muted leading-relaxed max-w-prose" style={riseDelay(2)}>
         {project.oneliner}
       </p>
-      <p className="mt-4 font-mono text-xs text-muted">
+      <p className="rise mt-4 font-mono text-xs text-muted" style={riseDelay(3)}>
         {project.stack.join(" · ")} — {project.year}
       </p>
-      <div className="case-study mt-10 border-t border-border pt-2 max-w-prose">
+      <div
+        className="rise case-study mt-10 border-t border-border pt-2 max-w-prose"
+        style={riseDelay(4)}
+      >
         <Body />
       </div>
     </article>
